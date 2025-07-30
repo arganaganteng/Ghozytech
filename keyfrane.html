@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Terminal</title>
+    <style>
+        body {
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+            overflow: hidden;
+        }
+
+        .terminal {
+            width: 80%;
+            height: 80vh;
+            margin: 5vh auto;
+            border: 2px solid #0f0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .terminal-header {
+            background-color: #111;
+            padding: 8px;
+            border-bottom: 1px solid #0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .terminal-body {
+            padding: 15px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+
+        .command-line {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .prompt {
+            margin-right: 10px;
+        }
+
+        .cursor {
+            animation: blink 1s infinite;
+            background-color: #0f0;
+            width: 10px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Matrix rain effect */
+        .matrix-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Hacker text animation */
+        .hacker-text {
+            animation: glitch 1s linear infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 #0f0, -2px 0 #f0f; }
+            20% { text-shadow: -2px 0 #0f0, 2px 0 #f0f; }
+            40%, 100% { text-shadow: 2px 0 #0f0, -2px 0 #f0f; }
+        }
+
+        /* Binary data stream animation */
+        .binary-stream {
+            position: absolute;
+            white-space: nowrap;
+            animation: stream 10s linear infinite;
+            color: rgba(0, 255, 0, 0.5);
+        }
+
+        @keyframes stream {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* Scan line effect */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 0, 0.3);
+            animation: scan 4s linear infinite;
+            z-index: 10;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        /* Grid overlay */
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <span>root@hacker-terminal:~</span>
+            <span class="hacker-text">SYSTEM ACCESS GRANTED</span>
+        </div>
+        <div class="scan-line"></div>
+        <div class="grid-overlay"></div>
+        <div class="terminal-body" id="terminalOutput">
+            <div>Initializing system...</div>
+            <div>Bypassing security protocols...</div>
+            <div>Establishing secure connection...</div>
+            <div>Connection established.</div>
+            <div>Welcome to the mainframe.</div>
+            <div>> SYSTEM STATUS: <span class="hacker-text">ACTIVE</span></div>
+            <div>> SECURITY LEVEL: <span class="hacker-text">CRITICAL</span></div>
+            <div>> ENCRYPTION: <span class="hacker-text">AES-256</span></div>
+            <div class="command-line">
+                <span class="prompt">root@terminal:~$</span>
+                <span id="typingText"></span>
+                <span class="cursor"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix rain effect
+        function createMatrixRain() {
+            const chars = "01";
+            const container = document.querySelector('.terminal');
+            
+            for (let i = 0; i < 50; i++) {
+                const stream = document.createElement('div');
+                stream.className = 'binary-stream';
+                stream.style.left = Math.random() * 100 + '%';
+                stream.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                stream.style.animationDelay = Math.random() * 5 + 's';
+                
+                let content = '';
+                for (let j = 0; j < 50; j++) {
+                    content += chars[Math.floor(Math.random() * chars.length)] + ' ';
+                }
+                
+                stream.textContent = content;
+                container.appendChild(stream);
+            }
+        }
+
+        // Typing effect
+        function typeText() {
+            const texts = [
+                "access mainframe --user=root --password=********",
+                "scan network --target=192.168.1.0/24",
+                "bruteforce ssh --ip=10.0.0.1 --wordlist=rockyou.txt",
+                "inject payload --target=vulnerable-service",
+                "bypass firewall --technique=ip-spoofing"
+            ];
+            const element = document.getElementById('typingText');
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            
+            function type() {
+                const currentText = texts[textIndex];
+                
+                if (isDeleting) {
+                    element.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    element.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+                
+                if (!isDeleting && charIndex === currentText.length) {
+                    isDeleting = true;
+                    setTimeout(type, 2000);
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                    setTimeout(type, 500);
+                } else {
+                    const speed = isDeleting ? 50 : 100;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+
+        // Add random hacker messages
+        function addHackerMessages() {
+            const messages = [
+                "> WARNING: Intrusion detection system activated",
+                "> ALERT: Unauthorized access attempt logged",
+                "> NOTICE: Firewall rules updated",
+                "> INFO: Data encryption in progress",
+                "> DEBUG: Bypassing security protocols",
+                "> STATUS: Connection established with remote server"
+            ];
+            const terminal = document.getElementById('terminalOutput');
+            
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    const message = messages[Math.floor(Math.random() * messages.length)];
+                    const element = document.createElement('div');
+                    element.textContent = message;
+                    terminal.insertBefore(element, terminal.lastElementChild);
+                    
+                    // Auto scroll to bottom
+                    terminal.scrollTop = terminal.scrollHeight;
+                }
+            }, 3000);
+        }
+
+        // Initialize all effects
+        window.onload = function() {
+            createMatrixRain();
+            typeText();
+            addHackerMessages();
+        };
+    </script>
+</body>
+</html>
